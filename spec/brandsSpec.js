@@ -20,7 +20,7 @@ describe('Brands', function () {
                 done(res);
             });
     });
-    it('gets a single factory', function (done) {
+    it('gets a single brand', function (done) {
         request(app)
             .get('/brands/0a75d3f4-c8ff-47bb-84c3-a874007d1b4f')
             .expect(200)
@@ -30,11 +30,11 @@ describe('Brands', function () {
                 done(res);
             });
     });
-    it('creates a new factory', function (done) {
+    it('creates a new brand', function (done) {
         request(app)
             .post('/brands')
             .send({
-              name: 'Test Factory',
+              name: 'Test Brand',
               email: 'test@gmail.com',
               phone_number: '585-343-2345',
               city: 'New York',
@@ -42,13 +42,44 @@ describe('Brands', function () {
             })
             .end(function (err, res) {
                 if (err) return done.fail(res);
-                expect(res.body.name).toEqual('Test Factory');
+                expect(res.body.name).toEqual('Test Brand');
                 expect(res.body.email).toEqual('test@gmail.com');
                 expect(res.body.phone_number).toEqual('585-343-2345');
                 expect(res.body.city).toEqual('New York');
                 expect(res.body.state).toEqual('NY');
-
-                done(res);
+                let brandId = res.body.id
+                //delete factory
+                request(app)
+                  .delete(`/brands/${brandId}`)
+                  .end((err, res) => {
+                    if (err) return done.fail(res);
+                    done(res)
+                  })
             });
+    })
+
+    it('Deletes a brand', function (done) {
+      // Create a new brand to delete
+      request(app)
+      .post('/brands')
+      .send({
+        "name": "Test Brand",
+        "email": "test@gmail.com",
+        "phone_number": "585-343-2345",
+        "city": "New York",
+        "state": "NY"
+      })
+      .end(function (err, res) {
+        if (err) return done.fail(res);
+        let brandId = res.body.id
+        //delete factory
+        request(app)
+        .delete(`/factories/${brandId}`)
+        .end((err, res) => {
+          if (err) return done.fail(res);
+          expect(res.statusCode).toEqual(200)
+          done(res)
+        })
+      })
     })
 });

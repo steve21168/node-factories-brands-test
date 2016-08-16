@@ -6,8 +6,8 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     companiesStore.list(function(err, factories) {
         if (err) throw err;
-        var factoriesList = []
-        factories.forEach(function(factory) {
+        let factoriesList = []
+        factories.forEach((factory) => {
           if (factory.company_type === "factory") {
             factoriesList.push(factory)
           }
@@ -25,7 +25,7 @@ router.get('/:id', function(req, res, next) {
 router.post('/', function(req, res, next) {
     if (!req.body) return res.sendStatus(400);
 
-    var newFactory = {
+    let newFactory = {
         name: req.body.name,
         email: req.body.email,
         phone_number: req.body.phone_number,
@@ -38,5 +38,13 @@ router.post('/', function(req, res, next) {
         res.json(newFactory);
     });
 });
+
+router.delete('/:id', (req, res, next) => {
+    companiesStore.remove(req.params.id, (err) => {
+    // called after the file has been removed
+    if (err) throw err; // err if the file removal failed
+    res.sendStatus('200')
+  });
+})
 
 module.exports = router;
