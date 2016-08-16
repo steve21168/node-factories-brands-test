@@ -30,6 +30,7 @@ describe('Factories', function () {
             .end(function(err, res) {
                 if (err) return done.fail(res);
                 expect(res.body).not.toBeNull();
+                expect(res.body.name).toEqual("The Pattern Makers")
                 done(res);
             });
     });
@@ -52,6 +53,8 @@ describe('Factories', function () {
                 expect(res.body.state).toEqual('NY');
                 let factId = res.body.id
                 //delete factory
+                //*Ideally want to isolate just testing create function*
+                //*In production test database possibly?*
                 request(app)
                 .delete(`/factories/${factId}`)
                 .end((err, res) => {
@@ -63,6 +66,8 @@ describe('Factories', function () {
 
     it('Deletes a factory', function (done) {
       // Create a new factory to delete
+      //*Ideally want to isolate just testing delete function*
+      //*In production test database possibly?*
       request(app)
       .post('/factories')
       .send({
@@ -75,7 +80,7 @@ describe('Factories', function () {
       .end(function (err, res) {
         if (err) return done.fail(res);
         let factId = res.body.id
-        //delete factory
+        //Delete factory
         request(app)
         .delete(`/factories/${factId}`)
         .end((err, res) => {

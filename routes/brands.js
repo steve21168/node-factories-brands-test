@@ -17,9 +17,11 @@ router.get('/', function(req, res, next) {
 });
 router.get('/:id', function(req, res, next) {
     companiesStore.load(req.params.id, function(err, brand) {
-        if (err) throw err;
-
-        res.json(brand);
+        if (err || brand.company_type !== "brand") {
+          throw err
+        } else {
+          res.json(brand);
+        }
     });
 });
 router.post('/', function(req, res, next) {
@@ -30,7 +32,8 @@ router.post('/', function(req, res, next) {
         email: req.body.email,
         phone_number: req.body.phone_number,
         city: req.body.city,
-        state: req.body.state
+        state: req.body.state,
+        company_type: "brand"
     };
     companiesStore.add(newBrand, function(err) {
         if (err) throw err;
@@ -41,7 +44,6 @@ router.post('/', function(req, res, next) {
 
 router.delete('/:id', (req, res, next) => {
     companiesStore.remove(req.params.id, (err) => {
-    // called after the file has been removed
     if (err) throw err; // err if the file removal failed
     res.sendStatus('200')
   });

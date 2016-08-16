@@ -22,11 +22,12 @@ describe('Brands', function () {
     });
     it('gets a single brand', function (done) {
         request(app)
-            .get('/brands/0a75d3f4-c8ff-47bb-84c3-a874007d1b4f')
+            .get('/brands/0s2342s-sdf23432-s8979')
             .expect(200)
             .end(function(err, res) {
                 if (err) return done.fail(res);
                 expect(res.body).not.toBeNull();
+                expect(res.body.name).toEqual("Nike");
                 done(res);
             });
     });
@@ -49,6 +50,8 @@ describe('Brands', function () {
                 expect(res.body.state).toEqual('NY');
                 let brandId = res.body.id
                 //delete factory
+                //*Ideally want to isolate just testing create function*
+                //*In production test database possibly?*
                 request(app)
                   .delete(`/brands/${brandId}`)
                   .end((err, res) => {
@@ -60,6 +63,8 @@ describe('Brands', function () {
 
     it('Deletes a brand', function (done) {
       // Create a new brand to delete
+      //*Ideally want to isolate just testing delete function*
+      //*In production test database possibly?*
       request(app)
       .post('/brands')
       .send({
@@ -72,7 +77,7 @@ describe('Brands', function () {
       .end(function (err, res) {
         if (err) return done.fail(res);
         let brandId = res.body.id
-        //delete factory
+        //Delete Brand
         request(app)
         .delete(`/factories/${brandId}`)
         .end((err, res) => {
